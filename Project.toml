@@ -1,0 +1,13 @@
+name = "POGA"
+uuid = "0993345b-1bdb-49b9-bbbb-09e026ef6521"
+authors = ["İsmail Tapan <ismltpn@gmail.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
