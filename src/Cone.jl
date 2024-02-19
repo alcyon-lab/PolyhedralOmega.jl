@@ -99,16 +99,17 @@ struct Cone{T}
         new{T}([primitive(ray) for ray in rays], apex, openness, sign)
     end
 
-    function Cone{T}(rays::Vector{Vector{R}}, apex::Vector{A}, openness::Vector{Bool}, sign::Bool=true) where {T,R,A}
+    function Cone{T}(rays::Vector{Ray{R}}, apex::Vector{A}, openness::Vector{Bool}, sign::Bool=true) where {T,R,A}
         new{T}([Ray{T}(primitive(ray)) for ray in rays], convert(Vector{T}, apex), openness, sign)
     end
 
-    function Cone{T}(rays::Vector{Ray{R}}, apex::Vector{A}, openness::Vector{Bool}, sign::Bool=true) where {T,R,A}
+    function Cone{T}(rays::Vector{Vector{R}}, apex::Vector{A}, openness::Vector{Bool}, sign::Bool=true) where {T,R,A}
         new{T}([primitive(Ray{T}(ray)) for ray in rays], convert(Vector{T}, apex), openness, sign)
     end
 end
 
 function Base.:(==)(c1::Cone{T1}, c2::Cone{T2}) where {T1,T2}
+    # TODO: fix ray check
     return c1.apex == c2.apex && c1.rays == c2.rays && c1.openness == c2.openness
 end
 

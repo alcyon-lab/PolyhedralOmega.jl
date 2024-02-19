@@ -1,51 +1,4 @@
 function EliminateLastCoordinate(cone::Cone{T})::CombinationOfCones{T} where {T<:NumberOrExpr}
-    p_indices = Vector{Int}([])
-    n_indices = Vector{Int}([])
-    result = CombinationOfCones{T}()
-    indices::Vector{Int} = []
-    for i in eachindex(cone.rays)
-        if cone.rays[i].direction[end] > 0
-            push!(p_indices, i)
-        elseif cone.rays[i].direction[end] < 0
-            push!(n_indices, i)
-        end
-    end
-
-    last_apex = cone.apex[end]
-    if last_apex < 0 #|| last_apex == 0 # && size(p_indices, 1) <= size(n_indices, 1) && size(p_indices, 1) >= 1
-        indices = p_indices
-    else
-        indices = n_indices
-        # TODO: make the cone prim
-        rays = collect(map(r -> Ray{T}(r.direction[1:end-1], r.apex[1:end-1]), cone.rays))
-        result += Cone(rays, cone.apex[1:end-1], cone.openness[:])
-    end
-    for j in indices
-        L = Vector{Ray}([])
-        for (i, ray) in enumerate(cone.rays)
-            if i == j
-                push!(L, (last_apex >= 0 ? -1 : 1) * ray)
-            else
-                ray_sum = -ray * cone.rays[j].direction[end] + cone.rays[j] * ray.direction[end]
-                push!(L, (last_apex >= 0 ? 1 : -1) * ray_sum)
-            end
-        end
-
-        openness = deepcopy(cone.openness)
-        openness[j] = false
-
-        rays = collect(map(r -> primitive(Ray{T}(r.direction[1:end-1], r.apex[1:end-1])), L))
-
-        apex = Vector{T}(cone.apex .+ cone.rays[j].direction * ((-last_apex) // cone.rays[j].direction[end]))[1:end-1]
-
-        new_cone = Cone(rays, apex, openness, cone.sign)
-        new_cone = flip(new_cone)
-        result += new_cone
-    end
-    return result
-end
-
-function EliminateLastCoordinate2(cone::Cone{T})::CombinationOfCones{T} where {T<:NumberOrExpr}
     result = CombinationOfCones{T}()
     last_apex = cone.apex[end]
     indices = []
@@ -91,7 +44,7 @@ function EliminateLastCoordinate2(cone::Cone{T})::CombinationOfCones{T} where {T
     return result
 end
 
-function EliminateCoordinates(cone::Cone{T}, k::Int) where {T<:NumberOrExpr}
+function EliminateCoordinates(cone::Cone{T}, k::Int)::CombinationOfCones{T} where {T<:NumberOrExpr}
     combination = CombinationOfCones{T}()
     combination += EliminateLastCoordinate(cone)
     for i = 1:(k-1)
@@ -99,21 +52,6 @@ function EliminateCoordinates(cone::Cone{T}, k::Int) where {T<:NumberOrExpr}
         for (cone, count) in combination.cones
             for j in 1:count
                 innercombination += EliminateLastCoordinate(cone)
-            end
-        end
-        combination = innercombination
-    end
-    return combination
-end
-
-function EliminateCoordinates2(cone::Cone{T}, k::Int) where {T<:NumberOrExpr}
-    combination = CombinationOfCones{T}()
-    combination += EliminateLastCoordinate2(cone)
-    for i = 1:(k-1)
-        innercombination = CombinationOfCones{T}()
-        for (cone, count) in combination.cones
-            for j in 1:count
-                innercombination += EliminateLastCoordinate2(cone)
             end
         end
         combination = innercombination

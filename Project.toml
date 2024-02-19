@@ -4,7 +4,9 @@ authors = ["İsmail Tapan <ismltpn@gmail.com> and contributors"]
 version = "0.1.0"
 
 [deps]
+IterTools = "c8e1da08-722c-5040-9ed9-7db0dc04731e"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+SmithNormalForm = "ba71f38f-f508-439b-ac77-437f86a20aa1"
 
 [compat]
 julia = "1"

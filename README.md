@@ -1,5 +1,10 @@
 # POGA
 
+## Required julia registeries
+```sh
+pkg> registry add https://github.com/wildart/BoffinStuff.git
+```
+
 ## Run
 
 ### Run example.jl
