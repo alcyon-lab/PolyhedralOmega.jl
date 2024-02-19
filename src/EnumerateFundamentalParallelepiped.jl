@@ -3,7 +3,7 @@ using IterTools
 
 
 function EnumerateFundamentalParallelepiped(cone::Cone{T}) where {T<:Number}
-    vrep = vrep_matrix(cone)
+    vrep = Matrix{Int}(vrep_matrix(cone))
     # println("VREP:", vrep)
     SMFRes = SmithNormalForm.smith(vrep)
     S = SmithNormalForm.diagm(SMFRes)
@@ -82,7 +82,7 @@ function EnumerateFundamentalParallelepiped(cone::Cone{T}) where {T<:Number}
             inner = 0
             i = 1
             for vi in v
-                inner += Wprime[i, j] * vi
+                inner += Wprime[j, i] * vi
                 i += 1
             end
             inner += qj
