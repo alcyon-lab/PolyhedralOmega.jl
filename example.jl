@@ -1,12 +1,25 @@
 
 using POGA
 
-A = Matrix{NumberOrExpr}([1 1 1; 1 2 2; 1 1 2]);
-b = Vector{NumberOrExpr}([10, 10, 10]);
 
 
+A = Matrix{NumberOrExpr}(
+    [
+        [1 0 0 0]
+        [-2 1 0 0]
+        [0 -3 2 0]
+        [0 0 -4 3]
+    ]
+);
+b = Vector{NumberOrExpr}([0, 0, 0, 0]);
+
+# Evaluation
+using AbstractAlgebra
 cones, fpps, r = PolyhedralOmega(A, b);
-cones, fpps, r = PolyhedralOmega(A, b, rf_as_string=true);
+x1 = polynomial_ring(QQ, ["x1"])[1][1]
+evaluate(r, [x1, x1, x1, x1])
+
+cones, fpps, r_as_str = PolyhedralOmega(A, b, rf_as_string=true);
 
 f = Vector{NumberOrExpr}([10, 10, 10]);
 cones, fpps, r = PolyhedralOmega(A, b, f, Vector{NumberOrExpr}([1]), rf_as_string=true);

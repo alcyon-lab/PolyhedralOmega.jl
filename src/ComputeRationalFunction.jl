@@ -1,8 +1,12 @@
-function ComputeRationalFunction(cone::Cone{T}, parallelepipeds::Vector{Vector{Int}}, X) where {T<:Number}
+using AbstractAlgebra
+
+function ComputeRationalFunction(cone::Cone{T}, parallelepipeds::Vector{Vector{Int}}) where {T<:Number}
+    VV = [string("x", i) for i in 1:length(cone.apex)]
+    S, X = polynomial_ring(QQ, VV)
     function RationalFunctionOf(z::Vector{<:Number})
         tmp = 1
         for i in eachindex(z)
-            tmp = tmp * (X[i]^z[i])
+            tmp = tmp * (X[i]^Int(z[i]))
         end
         return tmp
     end
@@ -17,7 +21,7 @@ function ComputeRationalFunction(cone::Cone{T}, parallelepipeds::Vector{Vector{I
         den *= (1 - RationalFunctionOf(ray.direction))
     end
 
-    res = (num / den)
+    res = (num // den)
     if (!cone.sign)
         res = -res
     end

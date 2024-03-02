@@ -19,11 +19,9 @@ function PolyhedralOmega(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) w
     # println(list_of_cones)
 
     fpps = Dict()
-    num_of_variables = length(macmahon_cone.apex)
     r_str = ""
     r = 0
 
-    x = [Symbol("x_$(i)") for i in 1:num_of_variables]
 
     for (cone, count) in list_of_cones.cones
         cone = Cone{Number}(cone.rays, cone.apex, cone.openness, cone.sign)
@@ -44,7 +42,7 @@ function PolyhedralOmega(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) w
                 r_str = cone_rf_str
             end
         else
-            cone_rf_s = ComputeRationalFunction(cone, fpp, x) * count
+            cone_rf_s = ComputeRationalFunction(cone, fpp) * count
             # println(cone_rf_s)
             r += cone_rf_s
         end
@@ -101,7 +99,7 @@ function PolyhedralOmega(A::Matrix{T}, b::Vector{T}, f::Vector{T}, values::Vecto
                     r_str = cone_rf_str
                 end
             else
-                cone_rf_s = ComputeRationalFunction(s_cone, fpp, x) * count
+                cone_rf_s = ComputeRationalFunction(s_cone, fpp) * count
                 # println(cone_rf_s)
                 r += cone_rf_s
             end
