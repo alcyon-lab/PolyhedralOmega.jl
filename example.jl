@@ -13,8 +13,8 @@ b = Vector{Value}([0, 0, 0, 0]);
 # Evaluation
 using AbstractAlgebra
 cones, fpps, r = PolyhedralOmega(A, b);
-x1 = polynomial_ring(QQ, ["x1"])[1][1]
-evaluate(r, [x1, x1, x1, x1])
+q = polynomial_ring(QQ, ["q"])[1][1]
+evaluate(r, [q, q, q, q])
 
 cones, fpps, r_as_str = PolyhedralOmega(A, b, rf_as_string=true);
 
