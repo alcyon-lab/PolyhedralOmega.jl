@@ -1,6 +1,6 @@
 using LinearAlgebra # for I
 
-function MacmahonLifting(A::Matrix{T}, b::Vector{T})::Cone{T} where {T<:NumberOrExpr}
+function MacmahonLifting(A::Matrix{T}, b::Vector{T})::Cone{T} where {T<:Value}
     size_a = size(A)
     Id = Matrix{T}(Matrix(1I, size_a[2], size_a[2]))
     new_matrix = vcat(Id, A)
@@ -10,7 +10,7 @@ function MacmahonLifting(A::Matrix{T}, b::Vector{T})::Cone{T} where {T<:NumberOr
     return Cone(rays, apex, openness)
 end
 
-function MacmahonLifting(A::Matrix{T}, b::Vector{T}, f::Vector{T}; symbol::Symbol=Symbol('a'))::Cone{T} where {T<:NumberOrExpr}
+function MacmahonLifting(A::Matrix{T}, b::Vector{T}, f::Vector{T}; symbol::Symbol=Symbol('a'))::Cone{T} where {T<:Value}
     size_a = size(A)
     Id = Matrix{T}(Matrix(1I, size_a[2], size_a[2]))
     new_matrix = vcat(Id, transpose(f), A)

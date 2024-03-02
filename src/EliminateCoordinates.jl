@@ -1,4 +1,4 @@
-function EliminateLastCoordinate(cone::Cone{T})::CombinationOfCones{T} where {T<:NumberOrExpr}
+function EliminateLastCoordinate(cone::Cone{T})::CombinationOfCones{T} where {T<:Value}
     result = CombinationOfCones{T}()
     last_apex = cone.apex[end]
     indices = []
@@ -31,7 +31,7 @@ function EliminateLastCoordinate(cone::Cone{T})::CombinationOfCones{T} where {T<
             push!(rays, reduced_ray)
         end
 
-        apex = Vector{T}(cone.apex - (last_apex // ray_j.direction[end]) * ray_j.direction)
+        apex = Vector{T}(cone.apex - (last_apex // ray_j.direction[end]) .* ray_j.direction)
         reduced_apex = apex[1:end-1]
 
         openness = deepcopy(cone.openness)
@@ -44,7 +44,7 @@ function EliminateLastCoordinate(cone::Cone{T})::CombinationOfCones{T} where {T<
     return result
 end
 
-function EliminateCoordinates(cone::Cone{T}, k::Int)::CombinationOfCones{T} where {T<:NumberOrExpr}
+function EliminateCoordinates(cone::Cone{T}, k::Int)::CombinationOfCones{T} where {T<:Value}
     combination = CombinationOfCones{T}()
     combination += cone
     for i = 1:k

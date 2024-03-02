@@ -1,15 +1,15 @@
 module POGA
 
-include("NumberOrExpr.jl")
+include("Value.jl")
 include("Cone.jl")
 include("ComputeRationalFunction.jl")
 include("CombinationOfCones.jl")
 include("EliminateCoordinates.jl")
 include("EnumerateFundamentalParallelepiped.jl")
 include("MacmahonLifting.jl")
-include("SubstitudeUtils.jl")
+include("SubstituteUtils.jl")
 
-function PolyhedralOmega(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:NumberOrExpr}
+function PolyhedralOmega(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:Value}
     macmahon_cone = MacmahonLifting(A, b)
     # println("Macmahon Cone")
     # println(summary(macmahon_cone))
@@ -55,7 +55,7 @@ function PolyhedralOmega(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) w
 
 end
 
-function PolyhedralOmega(A::Matrix{T}, b::Vector{T}, f::Vector{T}, values::Vector{<:T}; rf_as_string::Bool=false) where {T<:NumberOrExpr}
+function PolyhedralOmega(A::Matrix{T}, b::Vector{T}, f::Vector{T}, values::Vector{<:Number}; rf_as_string::Bool=false) where {T<:Value}
     α = Symbol("α")
     macmahon_cone = MacmahonLifting(A, b, f, symbol=α)
     # println("Macmahon Cone")
@@ -73,13 +73,13 @@ function PolyhedralOmega(A::Matrix{T}, b::Vector{T}, f::Vector{T}, values::Vecto
     fpps = []
 
     for val in values
-        # println("Substitude $(val) for α")
+        # println("Substitute $(val) for α")
         r = 0
         r_str = ""
         inner_fpps = Dict()
         for (cone, count) in list_of_cones.cones
-            s_cone = substitude_cone(cone, Dict(α => val))
-            # println("Substituded cone")
+            s_cone = substitute_cone(cone, Dict(α => val))
+            # println("Substituted cone")
             # println(summary(s_cone))
             fpp = EnumerateFundamentalParallelepiped(s_cone)
             inner_fpps[s_cone] = fpp
@@ -116,7 +116,7 @@ end
 
 export
     # Types
-    NumberOrExpr,
+    Value,
     Ray,
     Cone,
     CombinationOfCones,

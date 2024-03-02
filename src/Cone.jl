@@ -31,16 +31,24 @@ function Base.:-(ray1::Ray{T}, ray2::Ray) where {T}
     return Ray{T}(ray1.direction - ray2.direction, ray1.apex - ray2.apex)
 end
 
-function Base.:*(ray::Ray{T}, scalar::S) where {T,S<:T}
-    return Ray{T}(ray.direction * scalar, ray.apex)
+function Base.:*(ray::Ray{T}, scalar::Number) where {T}
+    return Ray{T}(ray.direction .* scalar, ray.apex)
+end
+
+function Base.:*(scalar::Number, ray::Ray{T}) where {T}
+    return ray * scalar
+end
+
+function Base.:*(ray::Ray{T}, scalar::Value) where {T}
+    return Ray{T}(ray.direction .* scalar.val, ray.apex)
+end
+
+function Base.:*(scalar::Value, ray::Ray{T}) where {T}
+    return ray * scalar.val
 end
 
 function Base.:-(ray::Ray{T}) where {T}
     return ray * -1
-end
-
-function Base.:*(scalar::S, ray::Ray{T}) where {T,S<:T}
-    return ray * scalar
 end
 
 function Base.:(==)(r1::Ray{T1}, r2::Ray{T2}) where {T1,T2}

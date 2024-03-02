@@ -1,9 +1,6 @@
-
 using POGA
 
-
-
-A = Matrix{NumberOrExpr}(
+A = Matrix{Value}(
     [
         [1 0 0 0]
         [-2 1 0 0]
@@ -11,7 +8,7 @@ A = Matrix{NumberOrExpr}(
         [0 0 -4 3]
     ]
 );
-b = Vector{NumberOrExpr}([0, 0, 0, 0]);
+b = Vector{Value}([0, 0, 0, 0]);
 
 # Evaluation
 using AbstractAlgebra
@@ -21,10 +18,11 @@ evaluate(r, [x1, x1, x1, x1])
 
 cones, fpps, r_as_str = PolyhedralOmega(A, b, rf_as_string=true);
 
-f = Vector{NumberOrExpr}([10, 10, 10]);
-cones, fpps, r = PolyhedralOmega(A, b, f, Vector{NumberOrExpr}([1]), rf_as_string=true);
-cones, fpps, r = PolyhedralOmega(A, b, f, Vector{NumberOrExpr}([1]));
+f = Vector{Value}([10, 10, 10, 10]);
+cones, fpps, r = PolyhedralOmega(A, b, f, Vector{Number}([1]), rf_as_string=true);
+cones, fpps, r = PolyhedralOmega(A, b, f, Vector{Number}([1]));
 
+println(r_as_str)
 
 using BenchmarkTools
 
