@@ -92,19 +92,33 @@ struct Cone{T}
     sign::Bool
 
     function Cone(rays::Vector{Vector{T}}, apex::Vector{T}, openness::Vector{Bool}, sign::Bool=true) where {T}
-        new{T}([primitive(Ray{T}(ray)) for ray in rays], apex, openness, sign)
+        ray_objects = [Ray{T}(ray) for ray in rays]
+        sorted_rays, sorted_openness = _sort_rays(ray_objects, openness)
+        new{T}(sorted_rays, apex, sorted_openness, sign)
     end
 
     function Cone(rays::Vector{Ray{T}}, apex::Vector{T}, openness::Vector{Bool}, sign::Bool=true) where {T}
-        new{T}([primitive(ray) for ray in rays], apex, openness, sign)
+        sorted_rays, sorted_openness = _sort_rays(rays, openness)
+        new{T}(sorted_rays, apex, sorted_openness, sign)
     end
 
     function Cone{T}(rays::Vector{Ray{R}}, apex::Vector{A}, openness::Vector{Bool}, sign::Bool=true) where {T,R,A}
-        new{T}([Ray{T}(primitive(ray)) for ray in rays], convert(Vector{T}, apex), openness, sign)
+        ray_objects = [Ray{T}(ray) for ray in rays]
+        sorted_rays, sorted_openness = _sort_rays(ray_objects, openness)
+        new{T}(sorted_rays, convert(Vector{T}, apex), sorted_openness, sign)
     end
 
     function Cone{T}(rays::Vector{Vector{R}}, apex::Vector{A}, openness::Vector{Bool}, sign::Bool=true) where {T,R,A}
-        new{T}([primitive(Ray{T}(ray)) for ray in rays], convert(Vector{T}, apex), openness, sign)
+        ray_objects = [Ray{T}(ray) for ray in rays]
+        sorted_rays, sorted_openness = _sort_rays(ray_objects, openness)
+        new{T}(sorted_rays, convert(Vector{T}, apex), sorted_openness, sign)
+    end
+
+    function _sort_rays(rays::Vector{Ray{T}}, openness::Vector{Bool})::Tuple{Vector{Ray{T}},Vector{Bool}} where {T}
+        paired = sort!([(primitive(rays[i]), openness[i]) for i in 1:length(rays)], lt=(x, y) -> isless(x[1].direction, y[1].direction))
+        sorted_rays = [p[1] for p in paired]
+        sorted_openness = [p[2] for p in paired]
+        return sorted_rays, sorted_openness
     end
 end
 
