@@ -86,7 +86,7 @@ function EnumerateFundamentalParallelepiped(cone::Cone{T}) where {T<:Number}
                 i += 1
             end
             inner += qj
-            inner = inner % lastDiagonal
+            inner = mod(inner, lastDiagonal)
 
             if inner == 0 && openness[j]
                 inner = lastDiagonal

@@ -15,7 +15,7 @@ function EliminateLastCoordinate(cone::Cone{T})::CombinationOfCones{T} where {T<
             end
         end
         rays = collect(map(r -> Ray{T}(r.direction[1:end-1], r.apex[1:end-1]), cone.rays))
-        result += Cone(rays, cone.apex[1:end-1], cone.openness[:])
+        result += Cone(rays, cone.apex[1:end-1], cone.openness[:], cone.sign)
     end
     for j in indices
         ray_j = cone.rays[j]
@@ -46,12 +46,13 @@ end
 
 function EliminateCoordinates(cone::Cone{T}, k::Int)::CombinationOfCones{T} where {T<:NumberOrExpr}
     combination = CombinationOfCones{T}()
-    combination += EliminateLastCoordinate(cone)
-    for i = 1:(k-1)
+    combination += cone
+    for i = 1:k
         innercombination = CombinationOfCones{T}()
         for (cone, count) in combination.cones
+            res = EliminateLastCoordinate(cone)
             for j in 1:count
-                innercombination += EliminateLastCoordinate(cone)
+                innercombination += res
             end
         end
         combination = innercombination

@@ -17,7 +17,11 @@ function ComputeRationalFunction(cone::Cone{T}, parallelepipeds::Vector{Vector{I
         den *= (1 - RationalFunctionOf(ray.direction))
     end
 
-    return num // den
+    res = (num / den)
+    if (!cone.sign)
+        res = -res
+    end
+    return res
 end
 
 
@@ -26,9 +30,9 @@ function ComputeRationalFunctionStr(cone::Cone{T}, parallelepipeds::Vector{Vecto
         tmp = ""
         for i in eachindex(z)
             if length(tmp) > 0
-                tmp = tmp * " * " * "x_{$(i)}^{$(z[i])}"
+                tmp = tmp * " * " * "x$(i)^($(z[i]))"
             else
-                tmp = "x_{$(i)}^{$(z[i])}"
+                tmp = "x$(i)^($(z[i]))"
             end
         end
         return "(" * tmp * ")"
@@ -49,6 +53,9 @@ function ComputeRationalFunctionStr(cone::Cone{T}, parallelepipeds::Vector{Vecto
             den = "(1 - $(RationalFunctionOf(ray.direction)))"
         end
     end
-
-    return num * "/" * den
+    res = "(" * num * ")/(" * den * ")"
+    if (!cone.sign)
+        res = "-(" * res * ")"
+    end
+    return res
 end
