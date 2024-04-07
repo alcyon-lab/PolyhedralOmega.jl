@@ -1,14 +1,14 @@
-using SmithNormalForm
+using NormalForms
 using IterTools
 
 
 function EnumerateFundamentalParallelepiped(cone::Cone{T}) where {T<:Number}
     vrep = Matrix{Int}(vrep_matrix(cone))
     # println("VREP:", vrep)
-    SMFRes = SmithNormalForm.smith(vrep)
-    S = SmithNormalForm.diagm(SMFRes)
-    Uinv = SMFRes.Sinv
-    Winv = SMFRes.Tinv
+    SNFRes = NormalForms.snf(vrep)
+    S = SNFRes.S
+    Uinv = SNFRes.U
+    Winv = SNFRes.V
     # println("S: ", S)
     # println("Uinv: ", Uinv)
     # println("Winv: ", Winv)
