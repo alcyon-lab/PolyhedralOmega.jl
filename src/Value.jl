@@ -176,6 +176,9 @@ end
 function Base.:+(s::Symbol, n::Number)::Expr
     return :($s + $n)
 end
+
+
+
 function Base.:+(n::Number, ex::Expr)::Expr
     return :($n + $ex)
 end
@@ -239,12 +242,9 @@ function Base.://(ex1::Expr, ex2::Expr)::Expr
     return :($ex1 // $ex2)
 end
 
-function Base.:+(s::Symbol, n::Number)::Expr
-    return :($s + $n)
-end
-function Base.:+(n::Number, s::Symbol)::Expr
-    return :($s + $n)
-end
+
+
+ 
 
 function substitute(e::Value, pair)
     return substitute(e.val, pair)
