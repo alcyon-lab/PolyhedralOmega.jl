@@ -21,7 +21,7 @@ function ComputeRationalFunction(cone::Cone{T}, parallelepipeds::Vector{Vector{I
         den *= (1 - RationalFunctionOf(ray.direction))
     end
 
-    return CombinationOfRationalFunctions([ num *(-1)^(!cone.sign) , den ])
+    return CombinationOfRationalFunctions(Pair(num * (-1)^(!cone.sign), den))
 end
 
 

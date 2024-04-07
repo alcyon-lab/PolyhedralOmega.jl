@@ -21,7 +21,7 @@ function PolyhedralOmega(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) w
 
     fpps = Dict()
     r_str = ""
-    r = CombinationOfRationalFunctions{T}()
+    r = CombinationOfRationalFunctions{Integer}()
 
 
     for (cone, count) in list_of_cones.cones
@@ -45,7 +45,7 @@ function PolyhedralOmega(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) w
         else
             cone_rf_s = ComputeRationalFunction(cone, fpp) * count
             # println(cone_rf_s)
-            r=r+cone_rf_s
+            r = cone_rf_s + r
         end
     end
     if rf_as_string
