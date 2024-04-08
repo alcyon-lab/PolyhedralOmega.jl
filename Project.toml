@@ -11,6 +11,7 @@ MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
 NormalForms = "109d20d8-9763-411c-9b60-7eb2a068657f"
 
 [compat]
+AbstractAlgebra = "0.40"
 julia = "1"
 
 [extras]
