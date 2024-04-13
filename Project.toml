@@ -3,5 +3,11 @@ uuid = "eaf9ee71-49fa-48f8-9df8-a09e5cbbfabf"
 authors = ["Alcyon Lab"]
 version = "1.0.0"
 
+[deps]
+Cones = "26e1cdcf-0d11-452a-80c0-82a5afc2740a"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Polynomials = "40aba029-825d-41bd-a97e-db86442ba04f"
+Values = "a33b2169-df44-41c1-bcb8-32c383ca81e5"
+
 [compat]
 julia = "1.2"
