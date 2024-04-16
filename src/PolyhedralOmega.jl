@@ -13,6 +13,8 @@ function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:N
     return solve(Matrix{Rational}(A), Vector{Rational}(b), rf_as_string=rf_as_string)
 end
 function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:Union{Value,Rational}}
+    A = -A
+    b = -b
     macmahon_cone = macmahon_lifting(A, b)
     list_of_cones = eliminate_coordinates(macmahon_cone, size(b, 1))
     fpps = Dict()
@@ -53,6 +55,8 @@ function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) w
 end
 
 function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) where {T<:Value}
+    A = -A
+    b = -b
     α = Symbol("α")
     macmahon_cone = macmahon_lifting(A, b, f, symbol=α)
     list_of_cones = eliminate_coordinates(macmahon_cone, size(b, 1))
