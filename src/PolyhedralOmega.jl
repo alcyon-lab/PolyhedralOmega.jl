@@ -9,7 +9,10 @@ include("MacmahonLifting.jl")
 
 export solve, optimize
 
-function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:Union{Value,Number}}
+function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:Number}
+    return solve(Matrix{Rational}(A), Vector{Rational}(b), rf_as_string=rf_as_string)
+end
+function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:Union{Value,Rational}}
     macmahon_cone = macmahon_lifting(A, b)
     list_of_cones = eliminate_coordinates(macmahon_cone, size(b, 1))
     fpps = Dict()
@@ -42,6 +45,10 @@ function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:U
 end
 
 function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) where {T<:Number}
+    return optimize(Matrix{Rational}(A), Vector{Rational}(b), Vector{Rational}(f), max_value)
+end
+
+function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) where {T<:Rational}
     return optimize(Matrix{Value}(A), Vector{Value}(b), Vector{Value}(f), max_value)
 end
 
