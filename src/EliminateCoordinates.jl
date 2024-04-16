@@ -1,6 +1,6 @@
 using Cones
 
-function eliminate_last_coordinate(cone::Cone{T})::CombinationOfCones{T} where {T<:Value}
+function eliminate_last_coordinate(cone::Cone{T})::CombinationOfCones{T} where {T<:Union{Value,Number}}
     result = CombinationOfCones{T}()
     last_apex = cone.apex[end]
     indices = []
@@ -46,7 +46,7 @@ function eliminate_last_coordinate(cone::Cone{T})::CombinationOfCones{T} where {
     return result
 end
 
-function eliminate_coordinates(cone::Cone{T}, k::Int)::CombinationOfCones{T} where {T<:Value}
+function eliminate_coordinates(cone::Cone{T}, k::Int)::CombinationOfCones{T} where {T<:Union{Value,Number}}
     combination = CombinationOfCones{T}()
     combination += cone
     for i = 1:k
