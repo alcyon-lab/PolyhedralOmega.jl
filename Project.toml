@@ -1,7 +1,7 @@
 name = "PolyhedralOmega"
 uuid = "eaf9ee71-49fa-48f8-9df8-a09e5cbbfabf"
 authors = ["Alcyon Lab"]
-version = "1.0.0"
+version = "1.0.1-DEV"
 
 [deps]
 Cones = "26e1cdcf-0d11-452a-80c0-82a5afc2740a"
