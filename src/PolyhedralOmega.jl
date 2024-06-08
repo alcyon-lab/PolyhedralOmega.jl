@@ -3,6 +3,7 @@ module PolyhedralOmega
 using Polynomials
 using Cones
 using Values
+using Symbolics
 
 include("EliminateCoordinates.jl")
 include("MacmahonLifting.jl")
