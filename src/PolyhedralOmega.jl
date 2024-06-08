@@ -20,6 +20,7 @@ function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:U
     fpps = Dict()
     r_str = ""
     r = CombinationOfRationalFunctions()
+    @variables x[1:size(A, 2)]
     for (cone, count) in list_of_cones.cones
         cone = Cone{Number}(cone.rays, cone.apex, cone.openness, cone.sign)
         fpp = enumerate_fundamental_parallelepiped(cone)
@@ -35,7 +36,7 @@ function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:U
                 r_str = cone_rf_str
             end
         else
-            cone_rf_s = compute_rational_function(cone, fpp) * count
+            cone_rf_s = compute_rational_function(cone, fpp, collect(x)) * count
             r = cone_rf_s + r
         end
     end
@@ -63,6 +64,7 @@ function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) w
     value = max_value // 2
     min_value = 0
     optimal_rf = (-1 => Value)
+    @variables x[1:size(A, 2)]
     while true
         rf = CombinationOfRationalFunctions()
         for (cone, count) in list_of_cones.cones
@@ -70,7 +72,7 @@ function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) w
             s_cone_eliminated = eliminate_last_coordinate(s_cone)
             for (s, s_count) in s_cone_eliminated.cones
                 fpp = enumerate_fundamental_parallelepiped(substitute_cone(s, Dict()))
-                rf += (compute_rational_function(s, fpp) * count * s_count)
+                rf += (compute_rational_function(s, fpp, x) * count * s_count)
             end
         end
         eval_res = evaluate_all_with(rf, length(b), 1)
