@@ -83,22 +83,22 @@ function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) w
             s_cone_eliminated = eliminate_last_coordinate(s_cone)
             for (s, s_count) in s_cone_eliminated.cones
                 fpp = enumerate_fundamental_parallelepiped(substitute_cone(s, Dict()))
-                rf += (compute_rational_function(s, fpp, x) * count * s_count)
+                rf += (compute_rational_function(s, fpp, collect(x)) * count * s_count)
             end
         end
-        eval_res = evaluate_all_with(rf, length(b), 1)
+        eval_res = evaluate_all_with(rf, collect(x), 1)
         res = floor(eval_res)
         if isequal(res, 1)
-            return simplify(rf)
+            return Polynomials.simplify(rf)
         elseif isequal(res, 0)
             tmp_value = value
             value = floor(min_value + (value - min_value) / 2)
             max_value = tmp_value
             if isequal(value, min_value)
                 if optimal_rf[1] != -1
-                    return simplify(optimal_rf[2])
+                    return Polynomials.simplify(optimal_rf[2])
                 end
-                return simplify(rf)
+                return Polynomials.simplify(rf)
             end
         else
             tmp_value = value
@@ -108,7 +108,7 @@ function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) w
                 optimal_rf = res => rf
             end
             if isequal(value, min_value)
-                return simplify(rf)
+                return Polynomials.simplify(rf)
             end
         end
     end

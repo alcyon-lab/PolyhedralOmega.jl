@@ -76,8 +76,8 @@ optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) where {T<:
 
 #### Example
 ```julia
-A = [2 3; 1 1];  # Coefficient matrix
-b = [5, 2];      # Right-hand side vector
+A = [1 2; -3 -4];  # Coefficient matrix
+b = [8, 2];      # Right-hand side vector
 f = [1, 1];      # Objective function
 max_value = 10   # Upper bound
 optimize(A, b, f, max_value)
