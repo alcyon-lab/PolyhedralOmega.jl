@@ -10,39 +10,49 @@ include("MacmahonLifting.jl")
 
 export solve, optimize
 
-function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:Number}
-    return solve(Matrix{Rational}(A), Vector{Rational}(b), rf_as_string=rf_as_string)
+
+function solve(A::Matrix{T}, b::Vector{T}; write_rf_to_out::Bool=false, out::IO=stdout, counting::Bool=false) where {T<:Number}
+    return solve(Matrix{Rational}(A), Vector{Rational}(b), write_rf_to_out=write_rf_to_out, out=out, counting=counting)
 end
-function solve(A::Matrix{T}, b::Vector{T}; rf_as_string::Bool=false) where {T<:Union{Value,Rational}}
+
+function solve(A::Matrix{T}, b::Vector{T}; write_rf_to_out::Bool=false, out::IO=stdout, counting::Bool=false) where {T<:Union{Value,Rational}}
     A = -A
     b = -b
     macmahon_cone = macmahon_lifting(A, b)
     list_of_cones = eliminate_coordinates(macmahon_cone, size(b, 1))
     fpps = Dict()
-    r_str = ""
     r = CombinationOfRationalFunctions()
     @variables x[1:size(A, 2)]
+    @variables q
+    first_loop = true
     for (cone, count) in list_of_cones.cones
         cone = Cone{Number}(cone.rays, cone.apex, cone.openness, cone.sign)
         fpp = enumerate_fundamental_parallelepiped(cone)
         fpps[cone] = fpp
-        if rf_as_string
-            cone_rf_str = compute_rational_function_str(cone, fpp)
+        if write_rf_to_out
+            cone_rf_str = compute_rational_function_str(cone, fpp, counting=counting)
             if count != 1
                 cone_rf_str = "($(count)*($(cone_rf_str)))"
             end
-            if (length(r_str) > 0)
-                r_str = r_str * " + " * cone_rf_str
+            if first_loop
+                write(out, cone_rf_str)
+                first_loop = false
             else
-                r_str = cone_rf_str
+                write(out, " + ")
+                write(out, cone_rf_str)
             end
         else
-            cone_rf_s = compute_rational_function(cone, fpp, collect(x)) * count
+            if counting
+                cone_rf_s = compute_rational_function(cone, fpp, [q for i in 1:size(A, 2)]) * count
+            else
+                cone_rf_s = compute_rational_function(cone, fpp, collect(x[1:size(A, 2)])) * count
+            end
             r = cone_rf_s + r
         end
     end
-    if rf_as_string
-        return list_of_cones, fpps, r_str
+
+    if write_rf_to_out
+        return list_of_cones, fpps, nothing
     else
         return list_of_cones, fpps, r
     end
