@@ -8,7 +8,7 @@ To install `PolyhedralOmega.jl`, you can use the Julia package manager. From the
 
 ```julia
 julia> using Pkg
-julia> pkg"registry add git@github.com:alcyon-lab/AlcyonRegistry.git"
+julia> pkg"registry add https://github.com/alcyon-lab/AlcyonRegistry.git"
 julia> pkg"add PolyhedralOmega"
 ```
 
