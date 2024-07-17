@@ -11,15 +11,15 @@ include("MacmahonLifting.jl")
 export solve, optimize
 
 
-function solve(A::Matrix{T}, b::Vector{T}; write_rf_to_out::Bool=false, out::IO=stdout, counting::Bool=false) where {T<:Number}
-    return solve(Matrix{Rational}(A), Vector{Rational}(b), write_rf_to_out=write_rf_to_out, out=out, counting=counting)
+function solve(A::Matrix{T}, b::Vector{T}; equality::Union{Vector{Bool},Nothing}=nothing, write_rf_to_out::Bool=false, out::IO=stdout, counting::Bool=false) where {T<:Number}
+    return solve(Matrix{Rational}(A), Vector{Rational}(b), equality=equality, write_rf_to_out=write_rf_to_out, out=out, counting=counting)
 end
 
-function solve(A::Matrix{T}, b::Vector{T}; write_rf_to_out::Bool=false, out::IO=stdout, counting::Bool=false) where {T<:Union{Value,Rational}}
+function solve(A::Matrix{T}, b::Vector{T}; equality::Union{Vector{Bool},Nothing}=nothing, write_rf_to_out::Bool=false, out::IO=stdout, counting::Bool=false) where {T<:Union{Value,Rational}}
     A = -A
     b = -b
     macmahon_cone = macmahon_lifting(A, b)
-    list_of_cones = eliminate_coordinates(macmahon_cone, size(b, 1))
+    list_of_cones = eliminate_coordinates(macmahon_cone, size(b, 1), equality)
     fpps = Dict()
     r = CombinationOfRationalFunctions()
     @variables x[1:size(A, 2)]
@@ -58,20 +58,20 @@ function solve(A::Matrix{T}, b::Vector{T}; write_rf_to_out::Bool=false, out::IO=
     end
 end
 
-function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) where {T<:Number}
-    return optimize(Matrix{Rational}(A), Vector{Rational}(b), Vector{Rational}(f), max_value)
+function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number; equality::Union{Vector{Bool},Nothing}=nothing) where {T<:Number}
+    return optimize(Matrix{Rational}(A), Vector{Rational}(b), Vector{Rational}(f), max_value, equality=equality)
 end
 
-function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) where {T<:Rational}
-    return optimize(Matrix{Value}(A), Vector{Value}(b), Vector{Value}(f), max_value)
+function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number; equality::Union{Vector{Bool},Nothing}=nothing) where {T<:Rational}
+    return optimize(Matrix{Value}(A), Vector{Value}(b), Vector{Value}(f), max_value, equality=equality)
 end
 
-function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number) where {T<:Value}
+function optimize(A::Matrix{T}, b::Vector{T}, f::Vector{T}, max_value::Number; equality::Union{Vector{Bool},Nothing}=nothing) where {T<:Value}
     A = -A
     b = -b
     α = Symbol("α")
     macmahon_cone = macmahon_lifting(A, b, f, symbol=α)
-    list_of_cones = eliminate_coordinates(macmahon_cone, size(b, 1))
+    list_of_cones = eliminate_coordinates(macmahon_cone, size(b, 1), equality)
     value = max_value // 2
     min_value = 0
     optimal_rf = (-1 => Value)
