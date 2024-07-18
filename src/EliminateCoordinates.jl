@@ -87,13 +87,13 @@ end
 function eliminate_coordinates(cone::Cone{T}, k::Int, equality::Union{Vector{Bool},Nothing})::CombinationOfCones{T} where {T<:Union{Value,Number}}
     combination = CombinationOfCones{T}()
     combination += cone
-    if equality isa Nothing
+    if isnothing(equality)
         equality = fill(false, (k,))
     end
     for i = 1:k
         innercombination = CombinationOfCones{T}()
         for (cone, count) in combination.cones
-            res = eliminate_last_coordinate(cone, equality=equality[i])
+            res = eliminate_last_coordinate(cone, equality=equality[k-i+1])
             for j in 1:count
                 innercombination += res
             end
