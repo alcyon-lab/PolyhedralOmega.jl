@@ -90,6 +90,7 @@ function optimize(A::Matrix{T}, b::Vector{T}, f::Union{Vector{T},Nothing}=nothin
     value = max_value // 2
     min_value = 0
     optimal_rf = (-1 => Value)
+    capacity = -1
     @variables x[1:size(A, 2)]
     while true
         rf = CombinationOfRationalFunctions()
@@ -109,6 +110,7 @@ function optimize(A::Matrix{T}, b::Vector{T}, f::Union{Vector{T},Nothing}=nothin
             tmp_value = value
             value = floor(min_value + (value - min_value) / 2)
             max_value = tmp_value
+            capacity = tmp_value
             if isequal(value, min_value)
                 if optimal_rf[1] != -1
                     return Polynomials.simplify(optimal_rf[2])
@@ -117,7 +119,11 @@ function optimize(A::Matrix{T}, b::Vector{T}, f::Union{Vector{T},Nothing}=nothin
             end
         else
             tmp_value = value
-            value = floor(value + (max_value - value) / 2)
+            if capacity == -1
+                value *= 2
+            else
+                value = floor(value + (capacity - value) / 2)
+            end
             min_value = tmp_value
             if optimal_rf[1] == -1 || optimal_rf[1] > res
                 optimal_rf = res => rf
